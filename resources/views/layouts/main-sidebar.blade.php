@@ -10,7 +10,8 @@
                         </div>
                     </div>
                     <div class="text-center mb-20">
-                        <h6 class="text-white">osama</h6>
+                        <h6 class="text-white">{{ session('name', 'Guest') }}
+                        </h6>
                     </div>
 
                     <!-- Dashboard (الصفحة الرئيسية) -->
@@ -37,7 +38,7 @@
                         </a>
                         <ul id="users" class="collapse" data-parent="#sidebarnav">
                             <li><a href="{{ route('user.index') }}">User List</a> <!-- (قائمة المستخدمين) --></li>
-                            {{-- <li><a href="{{ route('user.create') }}">Add User</a> <!-- (إضافة مستخدم) --></li> --}}
+                            <li><a href="{{ route('user.create') }}">Add User</a> <!-- (إضافة مستخدم) --></li>
                         </ul>
                     </li>
 
@@ -67,6 +68,7 @@
                             <div class="clearfix"></div>
                         </a>
                         <ul id="content" class="collapse" data-parent="#sidebarnav">
+                            <li><a href="{{ route('posts.index') }}">Add Post</a> <!-- (عرض المنشورات) --></li>
                             <li><a href="{{ route('posts.index') }}">Post List</a> <!-- (عرض المنشورات) --></li>
                         </ul>
                     </li>
@@ -83,28 +85,29 @@
                         </a>
                         <ul id="notifications" class="collapse" data-parent="#sidebarnav">
                             <li><a href="{{ route('notifications.create') }}">Send Notification</a> <!-- (إرسال إشعار) --></li>
-                            <li><a href="{{ route('notifications.index') }}">Notification Log</a> <!-- (سجل الإشعارات) --></li>
-                        </ul>
-                    </li> --}}
+                    <li><a href="{{ route('notifications.index') }}">Notification Log</a> <!-- (سجل الإشعارات) --></li>
+                </ul>
+                </li> --}}
 
-                    <!-- proposals (إدارة الاستبيانات) -->
-                    <li>
-                        <a href="javascript:void(0);" data-toggle="collapse" data-target="#proposals">
-                            <div class="pull-left">
-                                <i class="ti-list"></i>
-                                <span class="right-nav-text">Poposals</span>
-                            </div>
-                            <div class="pull-right"><i class="ti-plus"></i></div>
-                            <div class="clearfix"></div>
-                        </a>
-                        <ul id="proposals" class="collapse" data-parent="#sidebarnav">
-                            {{-- <li><a href="{{ route('proposals.create') }}">Add proposal</a> <!-- (إضافة استبيان) --></li> --}}
-                            <li><a href="{{ route('proposals.index') }}">proposal List</a> <!-- (قائمة الاستبيانات) --></li>
-                        </ul>
-                    </li>
+                <!-- proposals (إدارة الاستبيانات) -->
+                <li>
+                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#proposals">
+                        <div class="pull-left">
+                            <i class="ti-list"></i>
+                            <span class="right-nav-text">Poposals</span>
+                        </div>
+                        <div class="pull-right"><i class="ti-plus"></i></div>
+                        <div class="clearfix"></div>
+                    </a>
+                    <ul id="proposals" class="collapse" data-parent="#sidebarnav">
+                        {{-- <li><a href="{{ route('proposals.create') }}">Add proposal</a> <!-- (إضافة استبيان) -->
+                </li> --}}
+                <li><a href="{{ route('proposals.index') }}">proposal List</a> <!-- (قائمة الاستبيانات) --></li>
+                </ul>
+                </li>
 
-                    <!-- Settings (الإعدادات) -->
-                    {{-- <li>
+                <!-- Settings (الإعدادات) -->
+                {{-- <li>
                         <a href="javascript:void(0);" data-toggle="collapse" data-target="#settings">
                             <div class="pull-left">
                                 <i class="ti-settings"></i>
@@ -115,9 +118,9 @@
                         </a>
                         <ul id="settings" class="collapse" data-parent="#sidebarnav">
                             <li><a href="{{ route('settings.profile') }}">Profile Settings</a> <!-- (الإعدادات الشخصية) --></li>
-                            <li><a href="{{ route('settings.password.update') }}">Change Password</a> <!-- (تغيير كلمة المرور) --></li>
-                        </ul>
-                    </li> --}}
+                <li><a href="{{ route('settings.password.update') }}">Change Password</a> <!-- (تغيير كلمة المرور) --></li>
+                </ul>
+                </li> --}}
                 </ul>
             </div>
         </div>

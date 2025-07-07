@@ -44,7 +44,8 @@
                         <div class="dropdown-header">
                             <div class="media">
                                 <div class="media-body">
-                                    <h5 class="mt-0 mb-0">osama</h5>
+                                <h5 class="mt-0 mb-0">{{ session('name', 'Admin') }}</h5>
+
                                 </div>
                             </div>
                         </div>
@@ -53,14 +54,16 @@
                                 class="text-secondary ti-reload"></i>Change Password</a>
                         <a class="dropdown-item" href="{{ route('settings.profile') }}"><i
                                 class="text-warning ti-user"></i>Profile Settings</a>
+                        <a class="dropdown-item" href="{{ route('logout') }}"><i
+                                class="text-danger ti-unlock"></i>logout</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item"href=""
+                        <!-- <a class="dropdown-item"href="{{ route('logout') }}"
                             onclick="event.preventDefault();
                                          document.getElementById('logout-form').submit();"><i
-                                class="text-danger ti-unlock"></i>logout</a>
-                        <form id="logout-form" action="" method="POST" class="d-none">
+                                class="text-danger ti-unlock"></i>logout</a> -->
+                        <!-- <form id="logout-form" action="" method="POST" class="d-none">
                             @csrf
-                        </form>
+                        </form> -->
                     </div>
                 </li>
             </ul>

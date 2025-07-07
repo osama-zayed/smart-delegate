@@ -18,8 +18,23 @@ class ProposalController extends Controller
     }
     public function index()
     {
+        $firestore = app('firebase.firestore')->database();
+        $collection = $firestore->collection('proposals')->where('isApproved','==' , true);
+        $data = [];
+
+        foreach ($collection->documents() as $document) {
+            if ($document->exists()) {
+                $proposalsData = $document->data();
+                $data[] = [
+                    'id' => $document->id(),
+                    'content' => $proposalsData['content'],
+                    'department' => $proposalsData['department'],
+                    'voteCount' => $proposalsData['voteCount'],
+                ];
+            }
+        }
         return view("page.proposals.index",[
-            'proposals'=>[]
+            'proposals'=>$data 
         ]);
        
     }

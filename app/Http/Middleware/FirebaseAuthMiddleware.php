@@ -27,7 +27,6 @@ class FirebaseAuthMiddleware
 
         try {
             $verifiedIdToken = $this->auth->verifyIdToken($firebaseToken);
-            flash()->success('login successfully');
             return $next($request);
         } catch (FailedToVerifyToken $e) {
             flash()->error('Invalid email or password');

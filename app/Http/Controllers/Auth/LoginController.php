@@ -9,48 +9,85 @@ use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
-    protected $redirectTo = '/'; // الصفحة التي يتم التحويل إليها بعد النجاح في تسجيل الدخول
+    protected $redirectTo = '/'; 
     protected $auth;
 
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-        $path = base_path('storage/firebase/firebase.json');
+        $path = base_path(env('FIREBASE_CREDENTIALS'));
 
-        // تهيئة Firebase Auth
         $this->auth = (new Factory)->withServiceAccount($path)->createAuth();
     }
 
-    // عرض نموذج تسجيل الدخول
     public function showFormLogin()
     {
         return view('auth.login');
     }
 
-    // عملية تسجيل الدخول
+    public function logout()
+    {
+        session()->forget(['firebase_id_token', 'user_name', 'user_email']);
+        return redirect()->route('login')->with('message', 'تم تسجيل الخروج بنجاح');
+    }
+
     public function login(Request $request)
     {
         $validated = $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:6',
         ]);
-
+    
         try {
-            // التحقق من المستخدم باستخدام Firebase
+            // تسجيل الدخول
             $signInResult = $this->auth->signInWithEmailAndPassword($validated['email'], $validated['password']);
             $idToken = $signInResult->idToken();
-            // تخزين ID Token في الجلسة أو تخزينه في ملفات تعريف الارتباط
-            session(['firebase_id_token' => $idToken]);
-
-            return redirect($this->redirectTo); // التحويل بعد النجاح في تسجيل الدخول
+            $email = $validated['email'];
+            $ID = explode('@', $email)[0];
+    
+            // Firestore
+            $firestore = app('firebase.firestore')->database();
+            $collection = $firestore->collection('users')->where('ID', '==', $ID)->documents();
+            
+            $data = [];
+            foreach ($collection as $document) {
+                if ($document->exists()) {
+                    $userData = $document->data();
+                    $data[] = [
+                        'id' => $document->id(),
+                        'first_name' => $userData['first_name'],
+                        'role' => $userData['role'],
+                    ];
+                }
+            }
+            
+            if (empty($data)) {
+                flash()->error( 'المستخدم غير موجود في قاعدة البيانات');
+                return back()->withErrors(['email' => 'المستخدم غير موجود في قاعدة البيانات']);
+            }
+    
+            // تحقق من role
+            $userData = $data[0]; // Assuming there's only one matching document
+            if (isset($userData['role']) && $userData['role'] == 1) {
+                // تخزين البيانات في الجلسة
+                session([
+                    'firebase_id_token' => $idToken,
+                    'name' => $userData['first_name'] ?? 'مستخدم',
+                    'email' => $validated['email'],
+                ]);
+                flash()->success('تم تسجيل الدخول بنجاح.');
+                return redirect($this->redirectTo);
+            } else {
+                session()->forget(['firebase_id_token', 'name', 'email']);
+                return back()->withErrors(['email' => 'غير مصرح لك بالدخول.']);
+            }
         } catch (\Kreait\Firebase\Exception\Auth\AuthError $e) {
-            return back()->withErrors([
-                'email' => $e->getMessage(),
-            ]);
+            flash()->error($e->getMessage());
+            return back()->withErrors(['email' => $e->getMessage()]);
         } catch (\Exception $e) {
-            return back()->withErrors([
-                'email' => $e->getMessage(),
-            ]);
+            flash()->error($e->getMessage());
+            return back()->withErrors(['email' => $e->getMessage()]);
         }
     }
+    
 }

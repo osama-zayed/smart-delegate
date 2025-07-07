@@ -18,9 +18,9 @@ class UserModel {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->phone = $phone;
-        $this->address = $address;
+        $this->address = $address??'';
         $this->role = $role;
-        $this->email = $email;
+        $this->email = $email??'';
         $this->year = $year;
         $this->department = $department;
     }

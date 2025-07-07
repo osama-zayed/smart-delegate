@@ -12,10 +12,23 @@ class RoomController extends Controller
 {
     public function index()
     {
-        return view("page.rooms.index",[
-            'rooms' =>[]
+
+        $firestore = app('firebase.firestore')->database();
+        $collection = $firestore->collection('rooms');
+        $data = [];
+
+        foreach ($collection->documents() as $document) {
+            if ($document->exists()) {
+                $roomData = $document->data();
+                $data[] = [
+                    'id' => $document->id(),
+                    'data' => $roomData,
+                ];
+            }
+        }
+        return view("page.rooms.index", [
+            'rooms' => $data
         ]);
-       
     }
 
     /**
@@ -23,17 +36,14 @@ class RoomController extends Controller
      */
     public function create()
     {
-       
+
         return view("page.Course.create");
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-      
-    }
+    public function store(Request $request) {}
 
 
     /**
@@ -44,25 +54,34 @@ class RoomController extends Controller
         //
     }
 
-    public function edit(string $id)
-    {
-       
-    }
+    public function edit(string $id) {}
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-       
-    }
+    public function update(Request $request, string $id) {}
 
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $name)
+    public function destroy($id)
     {
-        
+        try {
+            // الاتصال بـ Firestore
+            $firestore = app('firebase.firestore')->database();
+            $collection = $firestore->collection('rooms');
+
+            // التحقق من وجود المستند ثم حذفه
+            $document = $collection->document($id);
+            if ($document->snapshot()->exists()) {
+                $document->delete();
+                return redirect()->route('rooms.index')->with('success', 'Room deleted successfully.');
+            } else {
+                return redirect()->route('rooms.index')->with('error', 'Room not found.');
+            }
+        } catch (\Exception $e) {
+            return redirect()->route('rooms.index')->with('error', 'An error occurred: ' . $e->getMessage());
+        }
     }
 }

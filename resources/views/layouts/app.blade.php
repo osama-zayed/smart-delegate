@@ -24,7 +24,6 @@
         @include('layouts.main-sidebar')
 
         @yield('content')
-        @include('layouts.footer')
     </div><!-- main content wrapper end-->
     </div>
 

@@ -16,7 +16,7 @@ trait FirebaseHelperTrait
      */
     public function initializeFirebase(): Database
     {
-        $path = base_path('storage/firebase/firebase.json');
+        $path = base_path(env('FIREBASE_CREDENTIALS'));
 
         if (!file_exists($path)) {
             throw new Exception('Firebase configuration file not found.');

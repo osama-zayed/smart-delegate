@@ -13,27 +13,17 @@
                 <div class="modal-body">
                     <div class="form-row">
                         <div class="col-12">
-                            <label for="title"> Post title
+                            <label for="content"> post content
                                 <span class="text-danger">*
-                                    @error('title')
+                                    @error('content')
                                         {{ $message }}
                                     @enderror
                                 </span>
                             </label>
-                            <input id="title" type="text" name="title" class="form-control"
-                                value="{{ old('title') }}" placeholder="Enter the post title" required>
+                            <textarea id="content" type="text" name="content" class="form-control"
+                            value="{{ old('content') }}" placeholder="Enter the post content" required cols="30" rows="10"></textarea>
                         </div>
-                        <div class="col-12">
-                            <label for="description"> post description
-                                <span class="text-danger">*
-                                    @error('description')
-                                        {{ $message }}
-                                    @enderror
-                                </span>
-                            </label>
-                            <textarea id="description" type="text" name="description" class="form-control"
-                            value="{{ old('description') }}" placeholder="Enter the post description" required cols="30" rows="10"></textarea>
-                        </div>
+                        <br>
                         <div class="col-12">
                             <label for="image"> Post image
                                 <span class="text-danger">*
